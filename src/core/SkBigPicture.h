@@ -47,6 +47,7 @@ public:
     int approximateOpCount() const override;
     size_t approximateBytesUsed() const override;
     const SkBigPicture* asSkBigPicture() const override { return this; }
+    void search(const SkRect& area, std::vector<std::unique_ptr<SkRect>>* hits) const override;
 
 // Used by GrLayerHoister
     void partialPlayback(SkCanvas*,

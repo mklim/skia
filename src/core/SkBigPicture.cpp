@@ -61,6 +61,10 @@ size_t SkBigPicture::approximateBytesUsed() const {
     return bytes;
 }
 
+void SkBigPicture::search(const SkRect& area, std::vector<std::unique_ptr<SkRect>>* hits) const {
+    fBBH->search(area, hits);
+}
+
 int SkBigPicture::drawableCount() const {
     return fDrawablePicts ? fDrawablePicts->count() : 0;
 }
@@ -68,4 +72,3 @@ int SkBigPicture::drawableCount() const {
 SkPicture const* const* SkBigPicture::drawablePicts() const {
     return fDrawablePicts ? fDrawablePicts->begin() : nullptr;
 }
-

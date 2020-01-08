@@ -8,6 +8,8 @@
 #ifndef SkPicture_DEFINED
 #define SkPicture_DEFINED
 
+#include <vector>
+#include <memory>
 #include "include/core/SkRect.h"
 #include "include/core/SkRefCnt.h"
 #include "include/core/SkTileMode.h"
@@ -211,6 +213,15 @@ public:
         example: https://fiddle.skia.org/c/@Picture_approximateBytesUsed
     */
     virtual size_t approximateBytesUsed() const = 0;
+
+    /** Finds all intersections with the given area for drawing operations of
+     *  the given picture.
+     *
+     *  @param area The area to check for drawing operations.
+     *  @param hits An empty array that will be populated with the indices of bounding boxes
+     *  of all hits.
+     */
+    virtual void search(const SkRect& area, std::vector<std::unique_ptr<SkRect>>* hits) const = 0;
 
     /** Return a new shader that will draw with this picture.
      *

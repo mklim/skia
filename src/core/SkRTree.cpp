@@ -157,11 +157,30 @@ void SkRTree::search(const SkRect& query, SkTDArray<int>* results) const {
     }
 }
 
+void SkRTree::search(const SkRect& query, std::vector<std::unique_ptr<SkRect>>* results) const {
+    if (fCount > 0 && SkRect::Intersects(fRoot.fBounds, query)) {
+        this->search(fRoot.fSubtree, query, results);
+    }
+}
+
 void SkRTree::search(Node* node, const SkRect& query, SkTDArray<int>* results) const {
     for (int i = 0; i < node->fNumChildren; ++i) {
         if (SkRect::Intersects(node->fChildren[i].fBounds, query)) {
             if (0 == node->fLevel) {
                 results->push_back(node->fChildren[i].fOpIndex);
+            } else {
+                this->search(node->fChildren[i].fSubtree, query, results);
+            }
+        }
+    }
+}
+
+void SkRTree::search(Node* node, const SkRect& query, std::vector<std::unique_ptr<SkRect>>* results) const {
+    for (int i = 0; i < node->fNumChildren; ++i) {
+        SkRect intersection = SkRect::MakeEmpty();
+        if (intersection.intersect(node->fChildren[i].fBounds, query)) {
+            if (0 == node->fLevel) {
+                results->push_back(std::make_unique<SkRect>(intersection));
             } else {
                 this->search(node->fChildren[i].fSubtree, query, results);
             }

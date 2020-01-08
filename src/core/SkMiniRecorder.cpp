@@ -22,9 +22,10 @@ class SkEmptyPicture final : public SkPicture {
 public:
     void playback(SkCanvas*, AbortCallback*) const override { }
 
-    size_t approximateBytesUsed() const override { return sizeof(*this); }
-    int    approximateOpCount()   const override { return 0; }
-    SkRect cullRect()             const override { return SkRect::MakeEmpty(); }
+    size_t approximateBytesUsed()          const override { return sizeof(*this); }
+    int    approximateOpCount()            const override { return 0; }
+    SkRect cullRect()                      const override { return SkRect::MakeEmpty(); }
+    void search(const SkRect& area, std::vector<std::unique_ptr<SkRect>>* hits) const override { }
 };
 
 // Calculate conservative bounds for each type of draw op that can be its own mini picture.
@@ -55,12 +56,19 @@ public:
         SkRecords::Draw(c, nullptr, nullptr, 0, nullptr)(fOp);
     }
 
-    size_t approximateBytesUsed() const override { return sizeof(*this); }
-    int    approximateOpCount()   const override { return 1; }
-    SkRect cullRect()             const override { return fCull; }
+    size_t approximateBytesUsed()          const override { return sizeof(*this); }
+    int    approximateOpCount()            const override { return 1; }
+    SkRect cullRect()                      const override { return fCull; }
+    void   search(const SkRect& area, std::vector<std::unique_ptr<SkRect>>* hits) const override {
+        SkRect intersection = SkRect::MakeEmpty();
+        if (intersection.intersect(area, bounds(fOp))) {
+            hits->push_back(std::make_unique<SkRect>(intersection));
+        }
+    }
 
 private:
     SkRect fCull;
+    SkRect fBounds;
     T      fOp;
 };
 

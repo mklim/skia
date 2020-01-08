@@ -8,6 +8,8 @@
 #ifndef SkBBoxHierarchy_DEFINED
 #define SkBBoxHierarchy_DEFINED
 
+#include <vector>
+
 #include "include/core/SkRect.h"
 #include "include/core/SkRefCnt.h"
 #include "include/private/SkTDArray.h"
@@ -30,6 +32,14 @@ public:
      * Populate results with the indices of bounding boxes interesecting that query.
      */
     virtual void search(const SkRect& query, SkTDArray<int>* results) const = 0;
+
+     /** Finds all intersections with the given area.
+     *
+     *  @param query The area to check for drawing operations.
+     *  @param results An empty array to be filled with the bounding boxes
+     *  of all hits.
+     */
+    virtual void search(const SkRect& query, std::vector<std::unique_ptr<SkRect>>* results) const = 0;
 
     virtual size_t bytesUsed() const = 0;
 

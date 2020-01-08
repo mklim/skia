@@ -326,6 +326,7 @@ sk_sp<SkPicture> SkPicture::MakePlaceholder(SkRect cull) {
           int    approximateOpCount()   const override { return SK_MaxS32; }
           size_t approximateBytesUsed() const override { return sizeof(*this); }
           SkRect cullRect()             const override { return fCull; }
+          void search(const SkRect& area, std::vector<std::unique_ptr<SkRect>>* hits) const override { }
 
           SkRect fCull;
     };

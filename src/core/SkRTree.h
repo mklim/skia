@@ -35,6 +35,7 @@ public:
 
     void insert(const SkRect[], int N) override;
     void search(const SkRect& query, SkTDArray<int>* results) const override;
+    void search(const SkRect& query, std::vector<std::unique_ptr<SkRect>>* results) const override;
     size_t bytesUsed() const override;
 
     // Methods and constants below here are only public for tests.
@@ -69,6 +70,7 @@ private:
     };
 
     void search(Node* root, const SkRect& query, SkTDArray<int>* results) const;
+    void search(Node* root, const SkRect& query, std::vector<std::unique_ptr<SkRect>>* resutls) const;
 
     // Consumes the input array.
     Branch bulkLoad(SkTDArray<Branch>* branches, int level = 0);
